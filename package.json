@@ -1,0 +1,39 @@
+{
+  "name": "nytreact",
+  "version": "1.0.0",
+  "description": "NYT Search ",
+  "main": "public/index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "webpack & node server",
+    "start": "node server",
+    "build": "webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hnguy0221/nytreact.git"
+  },
+  "author": "Hai Nguyen",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hnguy0221/nytreact/issues"
+  },
+  "homepage": "https://github.com/hnguy0221/nytreact#readme",
+  "dependencies": {
+    "axios": "^0.16.2",
+    "body-parser": "^1.18.2",
+    "express": "^4.16.0",
+    "mongoose": "^4.11.13",
+    "morgan": "^1.9.0",
+    "react": "^0.14.9",
+    "react-dom": "^0.14.9",
+    "react-router": "^4.2.0"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "webpack": "^3.6.0"
+  }
+}
