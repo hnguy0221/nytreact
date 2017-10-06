@@ -48,11 +48,11 @@ app.get("/api/headlines", function(req, res)
     var query = req.query;
     console.log("query: " + JSON.stringify(query));
     var saved = query.saved;
-    console.log("save: " + saved);
+    console.log("saved: " + saved);
     // We will find all the records, sort it in descending order, then limit the records to 5
     Article.find({saved: saved}).sort([
         ["date", "descending"]
-    ]).limit(5).exec(function(err, doc) {
+    ]).exec(function(err, doc) {
         if (err) 
         {
             console.log(err);
@@ -85,6 +85,25 @@ app.get("/api/id", function(req, res)
     });
 });
 
+// This is the route we will send PUT requests to update an article.
+app.put("/api", function(req, res) 
+{
+    console.log("In put(), BODY: " + JSON.stringify(req.body.article));
+    // Here we'll save the article based on the JSON input.
+    // We'll use Date.now() to always get the current date time
+    Article.update({_id: req.body.article.id}, {$set: {saved: true}}, function(err, doc) 
+    {
+        if (err) 
+        {
+            throw err;
+        }
+        else 
+        {
+            res.send(doc);
+        }
+    });
+});
+
 // This is the route we will send POST requests to save each search.
 app.post("/api", function(req, res) 
 {
@@ -94,7 +113,8 @@ app.post("/api", function(req, res)
     Article.create({
         headline: req.body.article.headline,
         date: Date.now(),
-        saved: req.body.article.saved
+        saved: req.body.article.saved,
+        link: req.body.article.link
     }, function(err, doc) {
         if (err) 
         {
@@ -107,6 +127,41 @@ app.post("/api", function(req, res)
     });
 });
 
+app.delete("/api", function(req, res) 
+{
+    var query = req.query;
+    console.log("query: " + JSON.stringify(query));
+    console.log("ID: " + query.id);
+    Article.remove({
+        _id: query.id,
+        saved: true
+    }, function(err, doc) {
+        if (err) 
+        {
+            throw err;
+        }
+        else 
+        {
+            res.send(doc);
+        }
+    });
+});
+
+app.delete("/api/all", function(req, res) 
+{
+    Article.remove({
+        saved: false
+    }, function(err, doc) {
+        if (err) 
+        {
+            throw err;
+        }
+        else 
+        {
+            res.send(doc);
+        }
+    });
+});
 // -------------------------------------------------
 
 // Listener

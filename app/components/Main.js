@@ -18,70 +18,69 @@ var Main = React.createClass(
 			savedArticles: []
 		};
 	},
-    // // The moment the page renders get articles
-    // componentDidMount: function() 
-    // {
-    //     // Get the latest article.
-    //     helpers.getArticle().then(function(response) 
-    //     {
-    //         console.log("response.data: ", response.data);
-    //         if (response !== this.state.results) 
-    //         {
-    //             console.log("Articles", response.data);
-    //             this.setState({ results: response.data });
-    //         }
-    //     }.bind(this));
-    // },
+    // The moment the page renders get saved articles if any
+    componentDidMount: function() 
+    {
+        //Get the saved article.
+        helpers.getSavedArticle().then(function(response) 
+        {
+            console.log("response.data: ", response.data);
+            if (response.data !== this.state.savedArticles) 
+            {
+                console.log("Saved Articles", response.data);
+                this.setState({ savedArticles: response.data });
+            }
+        }.bind(this));
+    },
     // If the component changes (i.e. if a search is entered)...
     componentDidUpdate: function() 
     {
-    	console.log(this.state.searchTerm);
-    	console.log(this.state.noOfRecords);
-    	console.log(this.state.startYear);
-    	console.log(this.state.endYear);
-        // Run the query for the address
-        helpers.runQuery(this.state.searchTerm
-        	,this.state.startYear
-        	,this.state.endYear).then(function(data) 
+        if (this.state.searchTerm !== "")
         {
-            if (data !== this.state.results) 
+            console.log(this.state.searchTerm);
+            console.log(this.state.noOfRecords);
+            console.log(this.state.startYear);
+            console.log(this.state.endYear);
+
+            helpers.runQuery(this.state.searchTerm
+                ,this.state.noOfRecords
+                ,this.state.startYear
+                ,this.state.endYear).then(function(data) 
             {
-                console.log("Articles: ", data);
-                var articles = [];
-                //var articlesToSave = [];
-                var displayCnt = parseInt(this.state.noOfRecords);
-                for (var i = 0; i < displayCnt; i++)
+                if (data !== "") 
                 {
-                    if (data[i].headline != null)
+                    //this function (componentDidUpdate) gets called when the 
+                    //state.results changes, reset searchTerm to blank so the 
+                    //runQuery() above does not gets called again to fix an 
+                    //API error.
+                    this.setState({ searchTerm: "" });
+                    this.setState({ noOfRecords: "" }); 
+                    this.setState({ startYear: "" });
+                    this.setState({ endYear: "" }); 
+
+                    //console.log("Articles: ", data);
+                    //this.setState({ results: data });
+                    var articlesArr = [];
+                    helpers.removeAllArticles().then(function(response) 
                     {
-                        var articleObj = {
-                            headline: data[i].headline.main,
-                            saved: false
-                        };
-                    	//articles.push(data[i]);
-                    	// After we've received the results... then post the results 
-                        // to our article database.
-                        helpers.postArticle(articleObj).then(function(response) 
+                        for (var i = 0; i < data.length; i++)
                         {
-                            console.log("Updated!");
-                            console.log("Current Article: " + JSON.stringify(response.data));
-                            // var id = response.data._id;
-                            // console.log("id: " + id);
-                            articles.push(response.data);
-                            console.log("articles: " + JSON.stringify(articles));
-                            // After we've done the post... then get the updated article
-                            // helpers.getArticle(id).then(function(response) 
-                            // {
-                            //     articles.push(response.data);
-                            //     console.log("Articles: " + articles);
-                            // }.bind(this));
-                        }.bind(this));
-                    }
+                            var articleObj = {
+                                headline: data[i].headline.main,
+                                saved: false,
+                                link: data[i].web_url
+                            };
+                            helpers.postArticle(articleObj).then(function(response)
+                            {
+                                articlesArr.push(response.data);
+                                console.log("Articles: ", articlesArr);
+                                this.setState({ results: articlesArr });
+                            }.bind(this));
+                        }   
+                    }.bind(this));          
                 }
-                this.setState({ results: articles }); 
-                // this.setState({ savedArticles: articlesToSave });              
-            }
-        }.bind(this));
+            }.bind(this));
+        }
     },
     // This function allows childrens to update the parent.
     setToFormValues: function(term, recordsCnt, startYr, endYr) 
@@ -93,15 +92,68 @@ var Main = React.createClass(
     },
     onArticleSaved: function(article)
     {
-        this.setState(function(prevState) 
+        var articleObj = {
+            id: article._id
+        };
+        helpers.updateArticle(articleObj).then(function(response) 
         {
-        	// var newState = prevState.savedArticles.slice();
-        	// newState.push(Object.assign({}, article));
-        	// return {savedArticles: newState};
-        	var tmpSavedArticles = prevState.savedArticles;
-            tmpSavedArticles.push(article);
-            return {savedArticles: tmpSavedArticles};
-        });
+            //Get the saved article.
+            helpers.getSavedArticle().then(function(response) 
+            {
+                console.log("response.data: ", response.data);
+                if (response.data !== this.state.savedArticles) 
+                {
+                    console.log("Saved Articles", response.data);
+                    this.setState({ savedArticles: response.data });
+                }
+                helpers.getArticles().then(function(response) 
+                {
+                    console.log("Articles: ", response.data);
+                    this.setState({ results: response.data });
+                }.bind(this));
+            }.bind(this));
+        }.bind(this));       
+    },
+    removeSavedArticle: function(article)
+    {
+        var articleObj = {
+            headline: article.headline,
+            saved: true,
+            id: article._id
+        }
+        helpers.removeSavedArticle(articleObj).then(function(response) 
+        {
+            // Get the latest article.
+            helpers.getSavedArticle().then(function(response) 
+            {
+                console.log("response.data: ", response.data);
+                if (response.data !== this.state.savedArticles) 
+                {
+                    //this function (componentDidUpdate) gets called when the 
+                    //state.results changes, reset searchTerm to blank so the 
+                    //runQuery() above does not gets called again to fix an 
+                    //API error.
+                    this.setState({ searchTerm: "" });
+                    this.setState({ noOfRecords: "" }); 
+                    this.setState({ startYear: "" });
+                    this.setState({ endYear: "" }); 
+
+                    console.log("Saved Articles", response.data);
+                    this.setState({ savedArticles: response.data });
+                }
+            }.bind(this));
+        }.bind(this));   
+    },
+    clearResults: function()
+    {
+        helpers.removeAllArticles().then(function(response) 
+        {
+            helpers.getArticles().then(function(response) 
+            {
+                console.log("Articles: ", response.data);
+                this.setState({ results: response.data });
+            }.bind(this));
+        }.bind(this)); 
     },
     render: function() {
     	var jumbotronStyle = {
@@ -119,15 +171,24 @@ var Main = React.createClass(
 		        </div>
 		        {/*Row for Searching New York Times*/}
 	            <div className="row">
-	                <Search setToFormValues={this.setToFormValues} />
+	                <Search 
+                        setToFormValues={this.setToFormValues} 
+                        clearResults={this.clearResults}
+                    />
 	            </div>
 	            {/*This row will handle all of the retrieved articles*/}
 	            <div className="row">
-	                <Results results={this.state.results}  onArticleSaved={this.onArticleSaved} />
+	                <Results 
+                        articles={this.state.results}  
+                        onArticleSaved={this.onArticleSaved} 
+                    />
 	            </div>
 	            {/*This row will handle all of the saved articles*/}
 	            <div className="row">
-	                <SavedArticles articles={this.state.savedArticles} />
+	                <SavedArticles 
+                        savedArticles={this.state.savedArticles} 
+                        removeSavedArticle={this.removeSavedArticle}
+                    />
 	            </div>
             </div>
         );

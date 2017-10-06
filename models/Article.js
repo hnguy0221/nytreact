@@ -10,6 +10,9 @@ var ArticleSchema = new Schema({
     },
     saved: {
         type: Boolean
+    },
+    link: {
+        type: String
     }
 });
 

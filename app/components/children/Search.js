@@ -64,7 +64,7 @@ var Search = React.createClass(
 					    <form role="form" onSubmit={this.handleSubmit}>
 				  	        {/*Here we create the text box for capturing the search term*/}
 	                        <div className="form-group">
-					            <label for="search">Search Term:</label>
+					            <label>Search Term:</label>
 					            <input 
 					                value={this.state.searchTerm} 
 					                type="text" 
@@ -76,7 +76,7 @@ var Search = React.createClass(
 					        </div>
 					        {/*Here we capture the number of records that the user wants to retrieve*/}
 					        <div className="form-group">
-					            <label for="pwd">Number of Records to Retrieve:</label>
+					            <label>Number of Records to Retrieve:</label>
 						        {/*<select
 						            value={this.state.noOfRecords}
 						            className="form-control" 
@@ -98,7 +98,7 @@ var Search = React.createClass(
 					        </div>
 				  	        {/*Here we capture the Start Year Parameter*/}
 					        <div className="form-group">
-					            <label for="startYear">Start Year (Optional):</label>
+					            <label>Start Year (Optional):</label>
 					            <input 
 					                value={this.state.startYear}
 					                type="text" 
@@ -109,7 +109,7 @@ var Search = React.createClass(
 					        </div>
 				  	        {/*Here we capture the End Year Parameter*/}
 					        <div className="form-group">
-					            <label for="endYear">End Year (Optional):</label>
+					            <label>End Year (Optional):</label>
 					            <input
 					                value={this.state.endYear}
 					                type="text" 
@@ -120,7 +120,8 @@ var Search = React.createClass(
 					        </div>
 					        {/*Here we have our final submit button*/}
 					        <button type="submit" className="btn btn-default" id="runSearch"><i className="fa fa-search"></i> Search</button>
-						    <button type="button" classname="btn btn-default" id="clearAll"><i className="fa fa-trash"></i> Clear Results</button>
+						    <button type="button" className="btn btn-default" id="clearAll" onClick={(function() {
+                                this.props.clearResults();}).bind(this)}><i className="fa fa-trash"></i> Clear Results</button>
 					    </form>
 				    </div>
 				</div>

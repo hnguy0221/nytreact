@@ -17,21 +17,24 @@ var SavedArticles = React.createClass(
 				        </h3>
 			        </div>
 			        {/*This main panel will hold each of the saved articles*/}
-			        <div className="panel-body" id="wellSection">
-				        {this.props.articles.map(function(article, i) {
-				        	var cnt = i + 1;
+			        <div className="panel-body" id="wellSection-2">
+				        {this.props.savedArticles.map((function(article, i) {
 	                        return (
 	                        	<div key={article._id} className="panel panel-default">
                                     <div className="panel-heading">
-                                        <h3><span class="label label-primary">{cnt}</span>. {article.headline}
-                                            <button className="btn btn-success delete">
+                                        <h3>
+                                            <a className="article-link" target="_blank" href={article.link}>
+                                                <span className="label label-primary">{i+1}</span> {article.headline}
+                                            </a>
+                                            <button className="btn btn-success delete" onClick={(function() {
+                                                this.props.removeSavedArticle(article);}).bind(this)}>
 	                                            Delete Article
 	                                        </button>
                                         </h3>
                                     </div>
                                 </div>
                             );
-				        })}
+				        }).bind(this))}
 			        </div>
 		        </div>
 		    </div>

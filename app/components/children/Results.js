@@ -1,15 +1,7 @@
 var React = require("react");
-var helpers = require("../utils/helpers");
 
 var Results = React.createClass(
 {
-	handleSaveArticle: function(article)
-	{
-        helpers.postArticle(article).then(function(response) 
-        {
-            this.props.onArticleSaved(article);
-        });
-	},
     render: function() 
     {
         return (
@@ -26,25 +18,25 @@ var Results = React.createClass(
 			        {/*This main panel will hold each of the resulting articles*/}
 			        <div className="panel-body" id="wellSection">
 			            {/* Here we use a map function to loop through an array in JSX */}
-                        {this.props.results.map((function(article, i) {
-                        	if (article.headline != null)
-                        	{
-                                return (
-                            	    <div key={article._id} className="panel panel-default">
-	                                    <div className="panel-heading">
-	                                        <h3><span class="label label-primary">{i+1}</span>. {article.headline}
-	                                            {/*<button className="btn btn-success save" onClick={(function() {
-	                                            	this.props.onArticleSaved(article);}).bind(this)}>
-	                                                Save Article
-	                                            </button>*/}
-	                                            <button className="btn btn-success save" onClick={this.handleSaveArticle}>
-	                                                Save Article
-	                                            </button>
-	                                        </h3>
-	                                    </div>
-	                                </div>
-                                );
-                            }
+                        {this.props.articles.map((function(article, i) {
+                            return (
+                        	    <div key={article._id} className="panel panel-default">
+                                    <div className="panel-heading">
+                                        <h3>
+                                            <a className="article-link" target="_blank" href={article.link}>
+                                                <span className="label label-primary">{i+1}</span> {article.headline}
+                                            </a>
+                                            <button className="btn btn-success save" onClick={(function() {
+                                            	this.props.onArticleSaved(article);}).bind(this)}>
+                                                Save Article
+                                            </button>
+                                            {/*<button className="btn btn-success save" onClick={this.handleSaveArticle}>
+                                                Save Article
+                                            </button>*/}
+                                        </h3>
+                                    </div>
+                                </div>
+                            );
                         }).bind(this))}
 			        </div>
 		        </div>
