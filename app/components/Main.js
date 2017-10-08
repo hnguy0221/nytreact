@@ -7,17 +7,17 @@ var helpers = require("./utils/helpers");
 
 var Main = React.createClass(
 {
-	getInitialState: function() 
-	{
-		return {
-			searchTerm: "",
-			noOfRecords: "",
-			startYear: "",
-			endYear: "",
-			results: [],
-			savedArticles: []
-		};
-	},
+    getInitialState: function() 
+    {
+        return {
+            searchTerm: "",
+            noOfRecords: "",
+            startYear: "",
+            endYear: "",
+            results: [],
+            savedArticles: []
+        };
+    },
     // The moment the page renders get saved articles if any
     componentDidMount: function() 
     {
@@ -163,17 +163,17 @@ var Main = React.createClass(
             color: "#FFF"
         };
         return (
-        	<div className="container">
-	            <div className="jumbotron" style={jumbotronStyle}>
-			        <h1 className="text-center">
-			            <strong>
-			                <i className="fa fa-newspaper-o"></i> New York Times Search
-			            </strong>
-			        </h1>
-		        </div>
-		        {/*Row for Searching New York Times*/}
-	            <div className="row">
-	                <Search 
+            <div className="container">
+                <div className="jumbotron" style={jumbotronStyle}>
+                    <h1 className="text-center">
+                        <strong>
+                            <i className="fa fa-newspaper-o"></i> New York Times Search
+                        </strong>
+                    </h1>
+                </div>
+                {/*Row for Searching New York Times*/}
+                <div className="row">
+                    <Search 
                         setToFormValues={this.setToFormValues} 
                         clearResults={this.clearResults}
                     />
@@ -191,7 +191,7 @@ var Main = React.createClass(
                         savedArticles={this.state.savedArticles} 
                         removeSavedArticle={this.removeSavedArticle}
                     />
-	            </div>
+                </div>
             </div>
         );
     }
