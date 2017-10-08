@@ -30,9 +30,6 @@ var Results = React.createClass(
                                             	this.props.onArticleSaved(article);}).bind(this)}>
                                                 Save Article
                                             </button>
-                                            {/*<button className="btn btn-success save" onClick={this.handleSaveArticle}>
-                                                Save Article
-                                            </button>*/}
                                         </h3>
                                     </div>
                                 </div>

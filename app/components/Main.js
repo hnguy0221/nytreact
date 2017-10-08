@@ -49,8 +49,8 @@ var Main = React.createClass(
             {
                 if (data !== "") 
                 {
-                    //this function (componentDidUpdate) gets called when the 
-                    //state.results changes, reset searchTerm to blank so the 
+                    //the function (componentDidUpdate) gets called when a 
+                    //state changes, reset searchTerm to blank so the 
                     //runQuery() above does not gets called again to fix an 
                     //API error.
                     this.setState({ searchTerm: "" });
@@ -58,8 +58,6 @@ var Main = React.createClass(
                     this.setState({ startYear: "" });
                     this.setState({ endYear: "" }); 
 
-                    //console.log("Articles: ", data);
-                    //this.setState({ results: data });
                     var articlesArr = [];
                     helpers.removeAllArticles().then(function(response) 
                     {
@@ -97,7 +95,10 @@ var Main = React.createClass(
         };
         helpers.updateArticle(articleObj).then(function(response) 
         {
-            //Get the saved article.
+            //Get the saved articles and reset its state so that
+            //the newly saved articles can be displayed. Also, 
+            //get the unsaved articles and reset its state to 
+            //display the unsaved articles.
             helpers.getSavedArticle().then(function(response) 
             {
                 console.log("response.data: ", response.data);
@@ -123,14 +124,15 @@ var Main = React.createClass(
         }
         helpers.removeSavedArticle(articleObj).then(function(response) 
         {
-            // Get the latest article.
+            //Get the remaining saved articles and reset its state to
+            //display the remaining saved articles.
             helpers.getSavedArticle().then(function(response) 
             {
                 console.log("response.data: ", response.data);
                 if (response.data !== this.state.savedArticles) 
                 {
-                    //this function (componentDidUpdate) gets called when the 
-                    //state.results changes, reset searchTerm to blank so the 
+                    //the function (componentDidUpdate) gets called when the 
+                    //state changes, reset searchTerm to blank so the 
                     //runQuery() above does not gets called again to fix an 
                     //API error.
                     this.setState({ searchTerm: "" });
